@@ -1,0 +1,50 @@
+.amrap-workout-view {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-bg);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: amrapEnter 300ms ease-out both;
+}
+
+@keyframes amrapEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.amrap-prep-overlay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.amrap-prep-label {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text-muted);
+  letter-spacing: 2px;
+}
+
+.amrap-prep-countdown {
+  font-size: 120px;
+  font-weight: 800;
+  color: var(--color-accent);
+  line-height: 1;
+  animation: prepPulse 1s ease-in-out infinite;
+}
+
+@keyframes prepPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}

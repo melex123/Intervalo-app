@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intervalo - Duration Display Preview</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .demo-container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .demo-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .demo-header h1 {
+      font-size: 28px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .demo-header p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* Settings Grid */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .settings-card {
+      background: #f5f7fa;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .settings-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .settings-card.work {
+      border-bottom: 3px solid #4caf50;
+    }
+
+    .settings-card.rest {
+      border-bottom: 3px solid #ff9800;
+    }
+
+    .settings-card.rounds {
+      border-bottom: 3px solid #9c27b0;
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .card-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #333;
+    }
+
+    /* NEW: Workout Duration Display */
+    .workout-duration {
+      margin: 20px 0;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .duration-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 8px;
+    }
+
+    .duration-value {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .duration-time {
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .duration-breakdown {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 400;
+    }
+
+    /* Play Button */
+    .play-button {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      display: block;
+      margin: 30px auto;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .play-button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    /* Interactive Demo */
+    .controls-demo {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f5f7fa;
+      border-radius: 12px;
+    }
+
+    .controls-demo h3 {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .slider-group {
+      margin-bottom: 15px;
+    }
+
+    .slider-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #ddd;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #667eea;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #667eea;
+      cursor: pointer;
+      border: none;
+    }
+
+    .example-badge {
+      display: inline-block;
+      background: #4caf50;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <div class="demo-header">
+      <h1>⏱️ Intervalo</h1>
+      <p>Total Workout Duration Feature Preview</p>
+    </div>
+
+    <!-- Settings Cards -->
+    <div class="settings-grid">
+      <div class="settings-card work">
+        <div class="card-label">Work</div>
+        <div class="card-value"><span id="workValue">45</span>s</div>
+      </div>
+      <div class="settings-card rest">
+        <div class="card-label">Rest</div>
+        <div class="card-value"><span id="restValue">15</span>s</div>
+      </div>
+      <div class="settings-card rounds">
+        <div class="card-label">Rounds</div>
+        <div class="card-value" id="roundsValue">5</div>
+      </div>
+    </div>
+
+    <!-- NEW FEATURE: Workout Duration Display -->
+    <div class="workout-duration">
+      <div class="duration-label">Total Workout Duration</div>
+      <div class="duration-value">
+        <span class="duration-time" id="totalTime">5m 0s</span>
+        <span class="duration-breakdown" id="breakdown">
+          (45s × 5 work + 15s × 5 rest)
+        </span>
+      </div>
+    </div>
+
+    <!-- Play Button -->
+    <button class="play-button">▶️</button>
+
+    <!-- Interactive Demo Controls -->
+    <div class="controls-demo">
+      <h3>🎮 Try It Live! Adjust the values:</h3>
+      
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Work Duration</span>
+          <span><strong id="workDisplay">45s</strong></span>
+        </div>
+        <input type="range" id="workSlider" min="5" max="180" step="5" value="45">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Rest Duration</span>
+          <span><strong id="restDisplay">15s</strong></span>
+        </div>
+        <input type="range" id="restSlider" min="5" max="180" step="5" value="15">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Rounds</span>
+          <span><strong id="roundsDisplay">5</strong></span>
+        </div>
+        <input type="range" id="roundsSlider" min="1" max="20" step="1" value="5">
+      </div>
+
+      <div style="text-align: center;">
+        <span class="example-badge">✨ Duration updates in real-time!</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get elements
+    const workSlider = document.getElementById('workSlider');
+    const restSlider = document.getElementById('restSlider');
+    const roundsSlider = document.getElementById('roundsSlider');
+
+    const workValue = document.getElementById('workValue');
+    const restValue = document.getElementById('restValue');
+    const roundsValue = document.getElementById('roundsValue');
+
+    const workDisplay = document.getElementById('workDisplay');
+    const restDisplay = document.getElementById('restDisplay');
+    const roundsDisplay = document.getElementById('roundsDisplay');
+
+    const totalTime = document.getElementById('totalTime');
+    const breakdown = document.getElementById('breakdown');
+
+    // Calculate total duration
+    function calculateDuration() {
+      const work = parseInt(workSlider.value);
+      const rest = parseInt(restSlider.value);
+      const rounds = parseInt(roundsSlider.value);
+
+      const totalWorkTime = work * rounds;
+      const totalRestTime = rest * rounds;
+      const totalSeconds = totalWorkTime + totalRestTime;
+
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+
+      // Update displays
+      workValue.textContent = work;
+      restValue.textContent = rest;
+      roundsValue.textContent = rounds;
+
+      workDisplay.textContent = work + 's';
+      restDisplay.textContent = rest + 's';
+      roundsDisplay.textContent = rounds;
+
+      totalTime.textContent = `${minutes}m ${seconds}s`;
+      breakdown.textContent = `(${work}s × ${rounds} work + ${rest}s × ${rounds} rest)`;
+    }
+
+    // Add event listeners
+    workSlider.addEventListener('input', calculateDuration);
+    restSlider.addEventListener('input', calculateDuration);
+    roundsSlider.addEventListener('input', calculateDuration);
+
+    // Initial calculation
+    calculateDuration();
+  </script>
+</body>
+</html>

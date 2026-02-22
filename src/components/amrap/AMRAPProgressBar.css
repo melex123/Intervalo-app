@@ -1,0 +1,16 @@
+.amrap-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--color-progress-track);
+  z-index: 200;
+}
+
+.amrap-progress-fill {
+  height: 100%;
+  background-color: var(--color-accent);
+  transition: width 150ms linear;
+  border-radius: 0 2px 2px 0;
+}

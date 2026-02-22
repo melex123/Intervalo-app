@@ -1,0 +1,112 @@
+.amrap-complete-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(11, 16, 34, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: completeOverlayIn 300ms ease-out both;
+}
+
+@keyframes completeOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.amrap-complete-modal {
+  background-color: var(--color-surface);
+  border-radius: 24px;
+  padding: 40px 32px;
+  max-width: 360px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  animation: completeModalIn 400ms ease-out 100ms both;
+  box-shadow: var(--shadow-md);
+}
+
+@keyframes completeModalIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.amrap-complete-icon {
+  animation: iconBounce 600ms ease-out 300ms both;
+}
+
+@keyframes iconBounce {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.amrap-complete-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text);
+  text-align: center;
+  margin: 0;
+}
+
+.amrap-complete-stats {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.amrap-complete-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.amrap-complete-stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.amrap-complete-stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.amrap-complete-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 120ms ease;
+  font-family: inherit;
+}
+
+.amrap-complete-btn:hover {
+  transform: translateY(-1px);
+  background-color: var(--color-accent-dark);
+}
+
+.amrap-complete-btn:active {
+  transform: translateY(0);
+}

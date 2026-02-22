@@ -1,0 +1,48 @@
+.amrap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 16px 20px 12px;
+}
+
+.amrap-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.amrap-header-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: 1px;
+}
+
+.amrap-header-subtitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.amrap-stop-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background-color: var(--color-accent);
+  color: var(--color-text-on-accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+
+.amrap-stop-btn:hover {
+  transform: scale(1.05);
+  background-color: var(--color-accent-dark);
+}
+
+.amrap-stop-btn:active {
+  transform: scale(0.95);
+}

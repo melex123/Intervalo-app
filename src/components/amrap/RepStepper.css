@@ -1,0 +1,54 @@
+.rep-stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rep-stepper-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-accent);
+  background: transparent;
+  color: var(--color-accent);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 120ms ease, transform 120ms ease;
+  line-height: 1;
+  padding: 0;
+  font-family: inherit;
+}
+
+.rep-stepper-btn:hover {
+  background-color: rgba(197, 229, 0, 0.15);
+}
+
+.rep-stepper-btn:active {
+  transform: scale(0.9);
+}
+
+.rep-stepper-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+  min-width: 24px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.rep-stepper--active .rep-stepper-btn {
+  border-color: var(--color-text-on-accent);
+  color: var(--color-text-on-accent);
+}
+
+.rep-stepper--active .rep-stepper-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.rep-stepper--active .rep-stepper-value {
+  color: var(--color-text-on-accent);
+}

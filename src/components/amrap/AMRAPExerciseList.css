@@ -1,0 +1,32 @@
+.amrap-exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 20px;
+  overflow-y: auto;
+  flex: 1;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding-bottom: 40px;
+}
+
+.amrap-exercise-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.amrap-exercise-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.amrap-exercise-list::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 2px;
+}
+
+@media (max-width: 480px) {
+  .amrap-exercise-list {
+    padding: 0 16px;
+    gap: 8px;
+    padding-bottom: 32px;
+  }
+}

@@ -1,0 +1,209 @@
+/* Base card */
+.exercise-card {
+  border-radius: 16px;
+  padding: 16px 20px;
+  transition: transform 300ms ease, opacity 300ms ease;
+}
+
+/* Previous (completed) variant */
+.exercise-card--previous {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.exercise-card--previous .exercise-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.exercise-card--previous .exercise-card-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exercise-card--previous .exercise-card-rep-count {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.exercise-card--previous .exercise-card-check {
+  font-size: 16px;
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.exercise-card--previous .exercise-card-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* Active variant */
+.exercise-card--active {
+  background-color: var(--color-accent);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exercise-card--active-rest {
+  background-color: var(--color-rest-bg);
+}
+
+.exercise-card-active-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.exercise-card-active-reps {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text-on-accent);
+}
+
+.exercise-card-active-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text-on-accent);
+}
+
+.exercise-card--active-rest .exercise-card-active-name {
+  color: var(--color-text);
+}
+
+.exercise-card-active-timer {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--color-text-on-accent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.exercise-card--active-rest .exercise-card-active-timer {
+  color: var(--color-text);
+}
+
+.exercise-card-active-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.exercise-card-pause-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background-color: #ffffff;
+  color: var(--color-text-on-accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 120ms ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.exercise-card-pause-btn:hover {
+  transform: scale(1.05);
+}
+
+.exercise-card-pause-btn:active {
+  transform: scale(0.95);
+}
+
+.exercise-card-done-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 28px;
+  border: none;
+  background-color: #ffffff;
+  color: var(--color-text-on-accent);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: inherit;
+}
+
+.exercise-card-done-btn:hover {
+  transform: scale(1.03);
+}
+
+.exercise-card-done-btn:active {
+  transform: scale(0.97);
+}
+
+/* Next (upcoming) variant */
+.exercise-card--next {
+  background-color: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+}
+
+.exercise-card--next.exercise-card--rest {
+  background-color: var(--color-rest-bg);
+}
+
+.exercise-card--next .exercise-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.exercise-card--next .exercise-card-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.exercise-card--next .exercise-card-timer-preview,
+.exercise-card--next .exercise-card-reps-preview {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+@media (max-width: 480px) {
+  .exercise-card {
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+
+  .exercise-card--active {
+    padding: 20px 16px;
+  }
+
+  .exercise-card-active-reps {
+    font-size: 24px;
+  }
+
+  .exercise-card-active-name {
+    font-size: 18px;
+  }
+
+  .exercise-card-active-timer {
+    font-size: 36px;
+  }
+
+  .exercise-card-pause-btn {
+    width: 46px;
+    height: 46px;
+  }
+
+  .exercise-card-done-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+}
