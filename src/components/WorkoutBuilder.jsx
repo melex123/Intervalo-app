@@ -1,57 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { EXERCISE_TYPES } from '../models/workout';
 import './WorkoutBuilder.css';
 
-const DURATION_PRESETS = [8, 12, 16, 20];
-
-const createBlankExercise = () => ({
-  id: String(Date.now()) + Math.random().toString(36).slice(2, 6),
-  name: '',
-  type: EXERCISE_TYPES.REPS,
-  reps: 10,
-  duration: 30,
-});
-
-const createRestExercise = () => ({
-  id: String(Date.now()) + Math.random().toString(36).slice(2, 6),
-  name: 'Rest',
-  type: EXERCISE_TYPES.REST,
-  duration: 30,
-});
+const formatTime = (totalSeconds) => {
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  if (mins === 0) return `${secs}s`;
+  if (secs === 0) return `${mins} min`;
+  return `${mins}m ${secs}s`;
+};
 
 const WorkoutBuilder = ({ onSave, onSaveAndStart, onBack }) => {
   const [workoutName, setWorkoutName] = useState('');
-  const [totalMinutes, setTotalMinutes] = useState(12);
-  const [customMinutes, setCustomMinutes] = useState('');
-  const [useCustomDuration, setUseCustomDuration] = useState(false);
-  const [exercises, setExercises] = useState([createBlankExercise()]);
+  const [rounds, setRounds] = useState(5);
+  const [roundMinutes, setRoundMinutes] = useState(1);
+  const [roundSeconds, setRoundSeconds] = useState(0);
+  const [restSeconds, setRestSeconds] = useState(30);
   const [errors, setErrors] = useState({});
 
-  const effectiveMinutes = useCustomDuration ? Number(customMinutes) || 0 : totalMinutes;
+  const roundDuration = roundMinutes * 60 + roundSeconds;
+  const totalDuration = useMemo(() => {
+    return rounds * roundDuration + (rounds - 1) * restSeconds;
+  }, [rounds, roundDuration, restSeconds]);
 
   const validate = () => {
     const newErrors = {};
     if (!workoutName.trim()) newErrors.name = true;
-    if (effectiveMinutes < 1) newErrors.duration = true;
-    const nonRestExercises = exercises.filter((e) => e.type !== EXERCISE_TYPES.REST);
-    if (nonRestExercises.length === 0) newErrors.exercises = 'Add at least one exercise';
-    nonRestExercises.forEach((e) => {
-      if (!e.name.trim()) newErrors[`ex-${e.id}`] = true;
-    });
+    if (rounds < 1) newErrors.rounds = true;
+    if (roundDuration < 10) newErrors.roundDuration = true;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const buildWorkoutConfig = () => ({
-    name: workoutName.trim(),
-    totalDuration: effectiveMinutes * 60,
-    exercises: exercises.map((e) => {
-      const base = { id: e.id, name: e.name.trim() || 'Rest', type: e.type };
-      if (e.type === EXERCISE_TYPES.REPS) base.reps = e.reps;
-      else base.duration = e.duration;
-      return base;
-    }),
-  });
+  const buildWorkoutConfig = () => {
+    const exercises = [];
+    for (let i = 0; i < rounds; i++) {
+      exercises.push({
+        id: `round-${i}`,
+        name: `Round ${i + 1}`,
+        type: EXERCISE_TYPES.TIMED,
+        duration: roundDuration,
+      });
+      if (i < rounds - 1 && restSeconds > 0) {
+        exercises.push({
+          id: `rest-${i}`,
+          name: 'Rest',
+          type: EXERCISE_TYPES.REST,
+          duration: restSeconds,
+        });
+      }
+    }
+    return {
+      name: workoutName.trim(),
+      totalDuration,
+      exercises,
+    };
+  };
 
   const handleSave = () => {
     if (!validate()) return;
@@ -63,22 +67,8 @@ const WorkoutBuilder = ({ onSave, onSaveAndStart, onBack }) => {
     onSaveAndStart(buildWorkoutConfig());
   };
 
-  const updateExercise = (id, updates) => {
-    setExercises((prev) =>
-      prev.map((e) => (e.id === id ? { ...e, ...updates } : e))
-    );
-  };
-
-  const removeExercise = (id) => {
-    setExercises((prev) => prev.filter((e) => e.id !== id));
-  };
-
-  const addExercise = () => {
-    setExercises((prev) => [...prev, createBlankExercise()]);
-  };
-
-  const addRest = () => {
-    setExercises((prev) => [...prev, createRestExercise()]);
+  const adjustValue = (setter, current, delta, min, max) => {
+    setter(Math.max(min, Math.min(max, current + delta)));
   };
 
   return (
@@ -94,153 +84,117 @@ const WorkoutBuilder = ({ onSave, onSaveAndStart, onBack }) => {
       </div>
 
       <div className="builder-form">
+        {/* Workout Name */}
         <div className="builder-section">
           <label className="builder-label">Workout Name</label>
           <input
             type="text"
             className={`builder-input ${errors.name ? 'builder-input-error' : ''}`}
-            placeholder="e.g. Morning Burn"
+            placeholder="e.g. Morning Intervals"
             value={workoutName}
             onChange={(e) => setWorkoutName(e.target.value)}
           />
         </div>
 
+        {/* Rounds */}
         <div className="builder-section">
-          <label className="builder-label">Duration (minutes)</label>
-          <div className="builder-duration-row">
-            {DURATION_PRESETS.map((min) => (
-              <button
-                key={min}
-                className={`builder-duration-btn ${!useCustomDuration && totalMinutes === min ? 'active' : ''}`}
-                onClick={() => {
-                  setTotalMinutes(min);
-                  setUseCustomDuration(false);
-                }}
-              >
-                {min}
-              </button>
-            ))}
-            <input
-              type="number"
-              className={`builder-duration-custom ${useCustomDuration ? 'active' : ''} ${errors.duration ? 'builder-input-error' : ''}`}
-              placeholder="Custom"
-              value={customMinutes}
-              min="1"
-              max="60"
-              onChange={(e) => {
-                setCustomMinutes(e.target.value);
-                setUseCustomDuration(true);
-              }}
-              onFocus={() => setUseCustomDuration(true)}
-            />
+          <label className="builder-label">Rounds</label>
+          <div className="builder-stepper">
+            <button
+              className="builder-stepper-btn"
+              onClick={() => adjustValue(setRounds, rounds, -1, 1, 50)}
+            >
+              −
+            </button>
+            <span className={`builder-stepper-value ${errors.rounds ? 'error' : ''}`}>
+              {rounds}
+            </span>
+            <button
+              className="builder-stepper-btn"
+              onClick={() => adjustValue(setRounds, rounds, 1, 1, 50)}
+            >
+              +
+            </button>
           </div>
         </div>
 
+        {/* Round Duration */}
         <div className="builder-section">
-          <label className="builder-label">Exercises</label>
-          {errors.exercises && (
-            <p className="builder-error-text">{errors.exercises}</p>
-          )}
-          <div className="builder-exercises">
-            {exercises.map((exercise, index) => (
-              <div key={exercise.id} className="builder-exercise-row">
-                <span className="builder-exercise-num">{index + 1}</span>
+          <label className="builder-label">Round Duration</label>
+          <div className="builder-time-picker">
+            <div className="builder-time-col">
+              <button
+                className="builder-time-arrow"
+                onClick={() => adjustValue(setRoundMinutes, roundMinutes, 1, 0, 10)}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 9L7 5L11 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <span className={`builder-time-value ${errors.roundDuration ? 'error' : ''}`}>
+                {String(roundMinutes).padStart(2, '0')}
+              </span>
+              <button
+                className="builder-time-arrow"
+                onClick={() => adjustValue(setRoundMinutes, roundMinutes, -1, 0, 10)}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <span className="builder-time-unit">min</span>
+            </div>
+            <span className="builder-time-sep">:</span>
+            <div className="builder-time-col">
+              <button
+                className="builder-time-arrow"
+                onClick={() => adjustValue(setRoundSeconds, roundSeconds, 5, 0, 55)}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 9L7 5L11 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <span className={`builder-time-value ${errors.roundDuration ? 'error' : ''}`}>
+                {String(roundSeconds).padStart(2, '0')}
+              </span>
+              <button
+                className="builder-time-arrow"
+                onClick={() => adjustValue(setRoundSeconds, roundSeconds, -5, 0, 55)}
+              >
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <span className="builder-time-unit">sec</span>
+            </div>
+          </div>
+        </div>
 
-                {exercise.type === EXERCISE_TYPES.REST ? (
-                  <div className="builder-exercise-rest-row">
-                    <span className="builder-exercise-rest-label">Rest</span>
-                    <div className="builder-exercise-duration-input">
-                      <input
-                        type="number"
-                        value={exercise.duration}
-                        min="5"
-                        max="300"
-                        onChange={(e) =>
-                          updateExercise(exercise.id, {
-                            duration: Math.max(5, Number(e.target.value) || 5),
-                          })
-                        }
-                      />
-                      <span className="builder-exercise-unit">sec</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="builder-exercise-fields">
-                    <input
-                      type="text"
-                      className={`builder-exercise-name ${errors[`ex-${exercise.id}`] ? 'builder-input-error' : ''}`}
-                      placeholder="Exercise name"
-                      value={exercise.name}
-                      onChange={(e) =>
-                        updateExercise(exercise.id, { name: e.target.value })
-                      }
-                    />
-                    <div className="builder-exercise-type-row">
-                      <div className="builder-type-toggle">
-                        {[EXERCISE_TYPES.REPS, EXERCISE_TYPES.TIMED].map((t) => (
-                          <button
-                            key={t}
-                            className={`builder-type-btn ${exercise.type === t ? 'active' : ''}`}
-                            onClick={() => updateExercise(exercise.id, { type: t })}
-                          >
-                            {t === EXERCISE_TYPES.REPS ? 'Reps' : 'Timed'}
-                          </button>
-                        ))}
-                      </div>
-                      {exercise.type === EXERCISE_TYPES.REPS ? (
-                        <div className="builder-exercise-value-input">
-                          <input
-                            type="number"
-                            value={exercise.reps}
-                            min="1"
-                            max="999"
-                            onChange={(e) =>
-                              updateExercise(exercise.id, {
-                                reps: Math.max(1, Number(e.target.value) || 1),
-                              })
-                            }
-                          />
-                          <span className="builder-exercise-unit">reps</span>
-                        </div>
-                      ) : (
-                        <div className="builder-exercise-value-input">
-                          <input
-                            type="number"
-                            value={exercise.duration}
-                            min="5"
-                            max="300"
-                            onChange={(e) =>
-                              updateExercise(exercise.id, {
-                                duration: Math.max(5, Number(e.target.value) || 5),
-                              })
-                            }
-                          />
-                          <span className="builder-exercise-unit">sec</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  className="builder-exercise-delete"
-                  onClick={() => removeExercise(exercise.id)}
-                >
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                    <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                </button>
-              </div>
+        {/* Rest Between Rounds */}
+        <div className="builder-section">
+          <label className="builder-label">Rest Between Rounds</label>
+          <div className="builder-rest-presets">
+            {[0, 15, 30, 45, 60, 90].map((s) => (
+              <button
+                key={s}
+                className={`builder-rest-btn ${restSeconds === s ? 'active' : ''}`}
+                onClick={() => setRestSeconds(s)}
+              >
+                {s === 0 ? 'None' : `${s}s`}
+              </button>
             ))}
           </div>
+        </div>
 
-          <div className="builder-add-row">
-            <button className="builder-add-btn" onClick={addExercise}>
-              + Exercise
-            </button>
-            <button className="builder-add-rest-btn" onClick={addRest}>
-              + Rest
-            </button>
+        {/* Total Duration Summary */}
+        <div className="builder-summary">
+          <div className="builder-summary-row">
+            <span className="builder-summary-label">Total Duration</span>
+            <span className="builder-summary-value">{formatTime(totalDuration)}</span>
+          </div>
+          <div className="builder-summary-detail">
+            {rounds}× {formatTime(roundDuration)} round
+            {restSeconds > 0 ? ` + ${restSeconds}s rest` : ''}
           </div>
         </div>
       </div>

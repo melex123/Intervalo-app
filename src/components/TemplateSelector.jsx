@@ -7,10 +7,29 @@ const formatDuration = (seconds) => {
   return `${mins} min`;
 };
 
+const isRoundBased = (exercises) => {
+  const rounds = exercises.filter((e) => e.type !== EXERCISE_TYPES.REST);
+  return rounds.length > 0 && rounds.every((e) => /^Round \d+$/.test(e.name));
+};
+
+const formatRoundSummary = (exercises) => {
+  const rounds = exercises.filter((e) => e.type !== EXERCISE_TYPES.REST);
+  const rests = exercises.filter((e) => e.type === EXERCISE_TYPES.REST);
+  const roundDur = rounds[0]?.duration || 0;
+  const restDur = rests[0]?.duration || 0;
+  const roundLabel = roundDur >= 60
+    ? `${Math.floor(roundDur / 60)}m${roundDur % 60 ? ` ${roundDur % 60}s` : ''}`
+    : `${roundDur}s`;
+  let summary = `${rounds.length} rounds × ${roundLabel}`;
+  if (restDur > 0) summary += ` · ${restDur}s rest`;
+  return summary;
+};
+
 const WorkoutCard = ({ template, onSelect, onDelete }) => {
   const exerciseCount = template.exercises.filter(
     (e) => e.type !== EXERCISE_TYPES.REST
   ).length;
+  const roundBased = isRoundBased(template.exercises);
 
   return (
     <button
@@ -38,21 +57,23 @@ const WorkoutCard = ({ template, onSelect, onDelete }) => {
       </div>
       <div className="template-card-meta">
         <span className="template-exercise-count">
-          {exerciseCount} exercises
+          {roundBased ? formatRoundSummary(template.exercises) : `${exerciseCount} exercises`}
         </span>
         <span className="template-type">AMRAP</span>
       </div>
-      <div className="template-exercises-preview">
-        {template.exercises.map((exercise, i) => (
-          <span key={i} className={`template-exercise-tag ${exercise.type === EXERCISE_TYPES.REST ? 'rest' : ''}`}>
-            {exercise.type === EXERCISE_TYPES.REST
-              ? `Rest ${exercise.duration}s`
-              : exercise.type === EXERCISE_TYPES.TIMED
-                ? `${exercise.name} ${exercise.duration}s`
-                : `${exercise.reps}× ${exercise.name}`}
-          </span>
-        ))}
-      </div>
+      {!roundBased && (
+        <div className="template-exercises-preview">
+          {template.exercises.map((exercise, i) => (
+            <span key={i} className={`template-exercise-tag ${exercise.type === EXERCISE_TYPES.REST ? 'rest' : ''}`}>
+              {exercise.type === EXERCISE_TYPES.REST
+                ? `Rest ${exercise.duration}s`
+                : exercise.type === EXERCISE_TYPES.TIMED
+                  ? `${exercise.name} ${exercise.duration}s`
+                  : `${exercise.reps}× ${exercise.name}`}
+            </span>
+          ))}
+        </div>
+      )}
     </button>
   );
 };
