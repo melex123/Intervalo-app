@@ -59,7 +59,7 @@ const WorkoutCard = ({ template, onSelect, onDelete }) => {
         <span className="template-exercise-count">
           {roundBased ? formatRoundSummary(template.exercises) : `${exerciseCount} exercises`}
         </span>
-        <span className="template-type">AMRAP</span>
+        <span className="template-type">INTERVALO</span>
       </div>
       {!roundBased && (
         <div className="template-exercises-preview">

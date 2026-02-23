@@ -7,7 +7,7 @@ const AMRAPHeader = ({ totalDurationSec, onStop }) => {
   return (
     <div className="amrap-header">
       <div className="amrap-header-info">
-        <span className="amrap-header-title">AMRAP</span>
+        <span className="amrap-header-title">INTERVALO</span>
         <span className="amrap-header-subtitle">
           Total workout time: {minutes} min
         </span>
