@@ -1,0 +1,430 @@
+.builder {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 20px 120px;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: pageEnter 500ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+}
+
+.builder-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+}
+
+.builder-back {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 180ms ease;
+}
+
+.builder-back:hover {
+  border-color: var(--color-accent);
+}
+
+.builder-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: 0.5px;
+}
+
+.builder-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.builder-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.builder-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.builder-input {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 16px;
+  color: var(--color-text);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 180ms ease;
+}
+
+.builder-input:focus {
+  border-color: var(--color-accent);
+}
+
+.builder-input-error {
+  border-color: #ff5c5c !important;
+}
+
+.builder-error-text {
+  font-size: 12px;
+  color: #ff5c5c;
+  font-weight: 600;
+}
+
+/* Duration presets */
+.builder-duration-row {
+  display: flex;
+  gap: 8px;
+}
+
+.builder-duration-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.builder-duration-btn.active {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-accent);
+}
+
+.builder-duration-custom {
+  width: 72px;
+  min-width: 72px;
+  padding: 10px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  text-align: center;
+  outline: none;
+  transition: border-color 180ms ease;
+  -moz-appearance: textfield;
+}
+
+.builder-duration-custom::-webkit-outer-spin-button,
+.builder-duration-custom::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.builder-duration-custom.active {
+  border-color: var(--color-accent);
+}
+
+.builder-duration-custom:focus {
+  border-color: var(--color-accent);
+}
+
+/* Exercise rows */
+.builder-exercises {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.builder-exercise-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.builder-exercise-num {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-text-muted);
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-muted);
+  border-radius: 6px;
+  margin-top: 2px;
+}
+
+.builder-exercise-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.builder-exercise-name {
+  background: var(--color-surface-muted);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  color: var(--color-text);
+  font-family: inherit;
+  outline: none;
+  transition: border-color 180ms ease;
+  width: 100%;
+}
+
+.builder-exercise-name:focus {
+  border-color: var(--color-accent);
+}
+
+.builder-exercise-type-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.builder-type-toggle {
+  display: flex;
+  background: var(--color-surface-muted);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.builder-type-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.builder-type-btn.active {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+}
+
+.builder-exercise-value-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-surface-muted);
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.builder-exercise-value-input input {
+  width: 48px;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  text-align: center;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.builder-exercise-value-input input::-webkit-outer-spin-button,
+.builder-exercise-value-input input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.builder-exercise-unit {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* Rest row */
+.builder-exercise-rest-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.builder-exercise-rest-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.builder-exercise-duration-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-surface-muted);
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.builder-exercise-duration-input input {
+  width: 48px;
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  text-align: center;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.builder-exercise-duration-input input::-webkit-outer-spin-button,
+.builder-exercise-duration-input input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.builder-exercise-delete {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 180ms ease;
+  margin-top: 2px;
+}
+
+.builder-exercise-delete:hover {
+  background: rgba(255, 92, 92, 0.15);
+  color: #ff5c5c;
+}
+
+/* Add buttons */
+.builder-add-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.builder-add-btn,
+.builder-add-rest-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 12px;
+  border: 1px dashed var(--color-border);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.builder-add-btn {
+  color: var(--color-accent);
+}
+
+.builder-add-btn:hover {
+  border-color: var(--color-accent);
+  background: rgba(197, 229, 0, 0.05);
+}
+
+.builder-add-rest-btn {
+  color: var(--color-text-muted);
+}
+
+.builder-add-rest-btn:hover {
+  border-color: var(--color-text-muted);
+  background: var(--color-surface-muted);
+}
+
+/* Bottom actions */
+.builder-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--color-bg) 60%, transparent);
+  z-index: 10;
+  justify-content: center;
+}
+
+.builder-actions > button {
+  max-width: 220px;
+}
+
+.builder-save-btn {
+  flex: 1;
+  padding: 14px 0;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.builder-save-btn:hover {
+  border-color: var(--color-accent);
+}
+
+.builder-start-btn {
+  flex: 1;
+  padding: 14px 0;
+  border-radius: 14px;
+  border: none;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.builder-start-btn:hover {
+  background: var(--color-accent-dark);
+}
+
+@media (max-width: 480px) {
+  .builder {
+    padding: 12px 16px 120px;
+  }
+}

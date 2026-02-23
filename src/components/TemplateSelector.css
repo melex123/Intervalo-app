@@ -5,6 +5,32 @@
   animation: sectionIn 420ms ease-out 80ms both;
 }
 
+.create-workout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  border: 2px dashed var(--color-accent);
+  background: rgba(197, 229, 0, 0.06);
+  color: var(--color-accent);
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.create-workout-btn:hover {
+  background: rgba(197, 229, 0, 0.12);
+}
+
+.create-workout-btn:active {
+  transform: scale(0.98);
+}
+
 .template-subtitle {
   font-size: 15px;
   font-weight: 600;
@@ -19,6 +45,7 @@
 }
 
 .template-card {
+  position: relative;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 16px;
@@ -33,6 +60,27 @@
   width: 100%;
   font-family: inherit;
   color: inherit;
+}
+
+.template-card-delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  background: var(--color-surface-muted);
+  transition: all 180ms ease;
+  z-index: 2;
+}
+
+.template-card-delete:hover {
+  background: rgba(255, 92, 92, 0.15);
+  color: #ff5c5c;
 }
 
 .template-card:hover {
