@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const STORAGE_KEY = 'intervalo-custom-workouts';
 
@@ -18,21 +18,25 @@ const saveWorkouts = (workouts) => {
 export const useCustomWorkouts = () => {
   const [customWorkouts, setCustomWorkouts] = useState(loadWorkouts);
 
-  useEffect(() => {
-    saveWorkouts(customWorkouts);
-  }, [customWorkouts]);
-
   const addWorkout = (workout) => {
     const newWorkout = {
       ...workout,
       id: `custom-${Date.now()}`,
     };
-    setCustomWorkouts((prev) => [newWorkout, ...prev]);
+    setCustomWorkouts((prev) => {
+      const updated = [newWorkout, ...prev];
+      saveWorkouts(updated);
+      return updated;
+    });
     return newWorkout;
   };
 
   const deleteWorkout = (id) => {
-    setCustomWorkouts((prev) => prev.filter((w) => w.id !== id));
+    setCustomWorkouts((prev) => {
+      const updated = prev.filter((w) => w.id !== id);
+      saveWorkouts(updated);
+      return updated;
+    });
   };
 
   return { customWorkouts, addWorkout, deleteWorkout };

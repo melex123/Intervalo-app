@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { EXERCISE_TYPES } from '../models/workout';
 import './WorkoutBuilder.css';
 
@@ -10,6 +10,18 @@ const formatTime = (totalSeconds) => {
   return `${mins}m ${secs}s`;
 };
 
+const ChevronUp = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M3 9L7 5L11 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const ChevronDown = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 const WorkoutBuilder = ({ onSave, onSaveAndStart, onBack }) => {
   const [workoutName, setWorkoutName] = useState('');
   const [rounds, setRounds] = useState(5);
@@ -19,9 +31,7 @@ const WorkoutBuilder = ({ onSave, onSaveAndStart, onBack }) => {
   const [errors, setErrors] = useState({});
 
   const roundDuration = roundMinutes * 60 + roundSeconds;
-  const totalDuration = useMemo(() => {
-    return rounds * roundDuration + (rounds - 1) * restSeconds;
-  }, [rounds, roundDuration, restSeconds]);
+  const totalDuration = rounds * roundDuration + (rounds - 1) * restSeconds;
 
   const validate = () => {
     const newErrors = {};
@@ -127,9 +137,7 @@ const WorkoutBuilder = ({ onSave, onSaveAndStart, onBack }) => {
                 className="builder-time-arrow"
                 onClick={() => adjustValue(setRoundMinutes, roundMinutes, 1, 0, 10)}
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M3 9L7 5L11 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <ChevronUp />
               </button>
               <span className={`builder-time-value ${errors.roundDuration ? 'error' : ''}`}>
                 {String(roundMinutes).padStart(2, '0')}
@@ -138,9 +146,7 @@ const WorkoutBuilder = ({ onSave, onSaveAndStart, onBack }) => {
                 className="builder-time-arrow"
                 onClick={() => adjustValue(setRoundMinutes, roundMinutes, -1, 0, 10)}
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <ChevronDown />
               </button>
               <span className="builder-time-unit">min</span>
             </div>
@@ -150,9 +156,7 @@ const WorkoutBuilder = ({ onSave, onSaveAndStart, onBack }) => {
                 className="builder-time-arrow"
                 onClick={() => adjustValue(setRoundSeconds, roundSeconds, 5, 0, 55)}
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M3 9L7 5L11 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <ChevronUp />
               </button>
               <span className={`builder-time-value ${errors.roundDuration ? 'error' : ''}`}>
                 {String(roundSeconds).padStart(2, '0')}
@@ -161,9 +165,7 @@ const WorkoutBuilder = ({ onSave, onSaveAndStart, onBack }) => {
                 className="builder-time-arrow"
                 onClick={() => adjustValue(setRoundSeconds, roundSeconds, -5, 0, 55)}
               >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <ChevronDown />
               </button>
               <span className="builder-time-unit">sec</span>
             </div>

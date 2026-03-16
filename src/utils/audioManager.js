@@ -2,13 +2,24 @@
 class AudioManager {
     constructor() {
         this.enabled = true;
+        this.audioContext = null;
+    }
+
+    _getContext() {
+        if (!this.audioContext) {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume().catch(() => {});
+        }
+        return this.audioContext;
     }
 
     beep(frequency = 800, duration = 100) {
         if (!this.enabled) return;
 
         try {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const audioContext = this._getContext();
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
 

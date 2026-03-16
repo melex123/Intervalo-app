@@ -56,23 +56,13 @@ export const useAMRAPTimer = (workoutConfig) => {
     if (nextIndex >= exs.length) {
       setCompletedRounds(prev => prev + 1);
       setCurrentExerciseIndex(0);
-      const firstEx = exs[0];
-      setExerciseTimeRemaining(
-        (firstEx.type === EXERCISE_TYPES.TIMED || firstEx.type === EXERCISE_TYPES.REST)
-          ? (firstEx.duration || 0) * 1000
-          : 0
-      );
+      setExerciseTimeRemaining(getExerciseDuration(exs[0]));
     } else {
       setCurrentExerciseIndex(nextIndex);
-      const nextEx = exs[nextIndex];
-      setExerciseTimeRemaining(
-        (nextEx.type === EXERCISE_TYPES.TIMED || nextEx.type === EXERCISE_TYPES.REST)
-          ? (nextEx.duration || 0) * 1000
-          : 0
-      );
+      setExerciseTimeRemaining(getExerciseDuration(exs[nextIndex]));
     }
     audioManager.finalBeep();
-  }, []);
+  }, [getExerciseDuration]);
 
   const tick = useCallback(() => {
     const currentPhase = phaseRef.current;
@@ -80,7 +70,7 @@ export const useAMRAPTimer = (workoutConfig) => {
     if (currentPhase === AMRAP_PHASES.PREP) {
       setGlobalTimeRemaining(prev => {
         const newTime = prev - TICK_INTERVAL;
-        if (newTime <= 3000 && newTime > 2900) {
+        if (prev > 3000 && newTime <= 3000) {
           audioManager.prepBeep();
         }
         if (newTime <= 0) {
@@ -107,7 +97,7 @@ export const useAMRAPTimer = (workoutConfig) => {
       if (ex && (ex.type === EXERCISE_TYPES.TIMED || ex.type === EXERCISE_TYPES.REST)) {
         setExerciseTimeRemaining(prev => {
           const newTime = prev - TICK_INTERVAL;
-          if (newTime <= 3000 && newTime > 2900 && prev > 3000) {
+          if (prev > 3000 && newTime <= 3000) {
             audioManager.prepBeep();
           }
           if (newTime <= 0) {

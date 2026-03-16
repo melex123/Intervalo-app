@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useAMRAPTimer, AMRAP_PHASES } from '../../hooks/useAMRAPTimer';
 import { EXERCISE_TYPES } from '../../models/workout';
 import AMRAPProgressBar from './AMRAPProgressBar';
@@ -13,7 +13,6 @@ const AMRAPWorkoutView = ({ config, onStop }) => {
   const {
     phase,
     globalTimeRemaining,
-    totalDuration,
     progressFraction,
     currentExerciseIndex,
     exerciseTimeRemaining,
@@ -34,11 +33,6 @@ const AMRAPWorkoutView = ({ config, onStop }) => {
     onStop();
   };
 
-  const handleComplete = () => {
-    stop();
-    onStop();
-  };
-
   // Auto-start when mounted
   React.useEffect(() => {
     if (phase === AMRAP_PHASES.IDLE) {
@@ -46,8 +40,9 @@ const AMRAPWorkoutView = ({ config, onStop }) => {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const nonRestExercises = exercises.filter(
-    (e) => e.type !== EXERCISE_TYPES.REST
+  const nonRestExercises = useMemo(
+    () => exercises.filter((e) => e.type !== EXERCISE_TYPES.REST),
+    [exercises]
   );
   const exerciseCount = nonRestExercises.length;
 
@@ -118,7 +113,7 @@ const AMRAPWorkoutView = ({ config, onStop }) => {
           completedRounds={completedRounds}
           totalDurationSec={config.totalDuration}
           totalReps={totalReps}
-          onDismiss={handleComplete}
+          onDismiss={handleStop}
         />
       )}
     </div>
